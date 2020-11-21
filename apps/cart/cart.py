@@ -72,8 +72,5 @@ class Cart(object):
 
     #for total cost in cart.html
     def get_total_cost(self):
-        if "total_price" in self.cart.values():
-            return sum(float(item['total_price']) for item in self.cart.values())
-        else:
-            return 0
-        
+        return sum(float(item['total_price']) for item in self)
+

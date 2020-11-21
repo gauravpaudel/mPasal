@@ -221,38 +221,46 @@
 			store.commit('increment', -1);
 			store.commit('changeTotalCost',-parseFloat(price));
 
-	       fetch('/api/add_to_cart/', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'X-CSRFToken': '{{ csrf_token }}'
-	            },
+			if(parseInt(quantity) == 0){
+				removeFromCart(product_id)
+			}
+			else
+			{
 
-	            credentials: 'same-origin',
-	            body: JSON.stringify(data)
-	        })
-	            .then((response) => {
-					console.log(response)
 
-					for(var i = 0; i<this.products.length; i++)
-					{
-						var product = this.products[i];
-						
-						if(product.id == product_id)
+				fetch('/api/add_to_cart/', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-CSRFToken': '{{ csrf_token }}'
+						},
+
+						credentials: 'same-origin',
+						body: JSON.stringify(data)
+					})
+					.then((response) => {
+						console.log(response)
+
+						for(var i = 0; i<this.products.length; i++)
 						{
-							this.products[i].quantity = parseInt(this.products[i].quantity) - 1;
-							this.products[i].total_price = parseInt(this.products[i].quantity) * parseFloat(this.products[i].price)
+							var product = this.products[i];
+							
+							if(product.id == product_id)
+							{
+								this.products[i].quantity = parseInt(this.products[i].quantity) - 1;
+								this.products[i].total_price = parseInt(this.products[i].quantity) * parseFloat(this.products[i].price)
+							}
+						
 						}
-					
-					}
-					
+						
 
-	            })
-	            .catch(function (error) {
-	                console.log('Error 2');
-	                console.log(error);
+					})
+					.catch(function (error) {
+						console.log('Error 2');
+						console.log(error);
 
-	            }) 
+					}) 
+			}
 	    },
 	    removeFromCart(product_id) {
 	        console.log('Product_id:', product_id);
